@@ -9,7 +9,7 @@
 
 > **An intelligent AI chatbot that represents you as a job candidate.** HR and recruiters can ask questions about your qualifications, experience, and skills - powered by advanced LLM technology.
 
-![Portfolio AI Demo](https://img.shields.io/badge/Live_Demo-Click_Here-2ea44f?style=for-the-badge&logo=vercel)
+[![Portfolio AI Demo](https://img.shields.io/badge/Live_Demo-Click_Here-2ea44f?style=for-the-badge&logo=vercel)](https://portfolio-ai-fullstack1.vercel.app/)
 
 ---
 
