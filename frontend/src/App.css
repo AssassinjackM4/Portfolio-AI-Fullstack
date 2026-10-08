@@ -1,0 +1,49 @@
+.glass-panel {
+  @apply border border-white/10 bg-slate-950/60 shadow-2xl shadow-slate-950/60 backdrop-blur-xl;
+}
+
+.status-pill {
+  @apply inline-flex items-center gap-2 rounded-full border border-cyan-500/40 bg-cyan-500/10 px-3 py-1.5 text-xs font-medium text-cyan-200;
+}
+
+.metric-card {
+  @apply rounded-2xl border border-white/10 bg-slate-900/60 p-3.5;
+}
+
+.prompt-chip {
+  @apply w-full rounded-xl border border-white/10 bg-slate-900/80 px-3 py-2 text-left text-sm text-slate-200 transition hover:border-cyan-400/40 hover:bg-cyan-500/10;
+}
+
+.primary-btn,
+.secondary-btn {
+  @apply inline-flex items-center justify-center gap-2 rounded-xl px-4 py-2.5 text-sm font-semibold transition focus:outline-none focus:ring-2 focus:ring-cyan-400/70;
+}
+
+.primary-btn {
+  @apply bg-gradient-to-r from-cyan-500 to-violet-500 text-white shadow-lg shadow-cyan-500/20 hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-70;
+}
+
+.secondary-btn {
+  @apply border border-white/10 bg-white/5 text-slate-100 hover:border-cyan-400/30 hover:bg-cyan-500/10;
+}
+
+.input-area {
+  @apply w-full rounded-2xl border border-white/10 bg-slate-950/80 px-4 py-3 text-sm text-slate-50 placeholder:text-slate-500 focus:border-cyan-400/60 focus:outline-none focus:ring-2 focus:ring-cyan-400/20;
+}
+
+.chat-scroll {
+  scrollbar-color: rgba(148, 163, 184, 0.5) rgba(15, 23, 42, 0.2);
+}
+
+.chat-scroll::-webkit-scrollbar {
+  width: 8px;
+}
+
+.chat-scroll::-webkit-scrollbar-track {
+  background: rgba(15, 23, 42, 0.2);
+}
+
+.chat-scroll::-webkit-scrollbar-thumb {
+  background: rgba(148, 163, 184, 0.5);
+  border-radius: 999px;
+}
