@@ -15,7 +15,12 @@ import {
 } from 'lucide-react'
 import './App.css'
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000'
+const API_URL = (
+  import.meta.env.VITE_API_URL ||
+  (import.meta.env.DEV ? 'http://localhost:8000' : '')
+).replace(/\/+$/, '')
+const API_CONFIGURATION_ERROR =
+  'Backend URL is not configured. Set VITE_API_URL to your Render backend URL in Vercel, then redeploy.'
 
 const suggestedQuestions = [
   'Tell me about the candidate\'s strongest technical skills.',
@@ -57,6 +62,11 @@ function App() {
       return
     }
 
+    if (!API_URL) {
+      setError(API_CONFIGURATION_ERROR)
+      return
+    }
+
     const formData = new FormData()
     formData.append('file', file)
 
@@ -89,6 +99,10 @@ function App() {
 
     const trimmedQuestion = question.trim()
     if (!trimmedQuestion) return
+    if (!API_URL) {
+      setError(API_CONFIGURATION_ERROR)
+      return
+    }
 
     const userMessage = {
       id: `user-${Date.now()}`,
