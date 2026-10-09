@@ -33,6 +33,16 @@
 - **Interview Prep** - Practice answering common interview questions
 - **Networking** - Share with HR professionals and hiring managers
 
+## 🛠️ Tech Stack
+
+| Category | Technology |
+|----------|------------|
+| 💻 **Frontend** | React, Vite, Tailwind CSS |
+| ⚙️ **Backend** | Python, FastAPI |
+| 🤖 **AI/ML** | Groq AI (GPT-OSS-120B), PyPDF |
+| 🚀 **Deployment** | Vercel, Render |
+| 🔌 **API Communication** | RESTful APIs, Axios |
+
 ---
 
 ## 🛠️ Tech Stack
