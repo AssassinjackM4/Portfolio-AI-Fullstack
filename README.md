@@ -44,7 +44,3 @@
 | 🔌 **API Communication** | RESTful APIs, Axios |
 
 ---
-
-## 🛠️ Tech Stack
-
-### **Frontend**
