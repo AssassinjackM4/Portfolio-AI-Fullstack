@@ -6,7 +6,6 @@ import {
   ArrowUp,
   Bot,
   BrainCircuit,
-  CheckCircle2,
   FileText,
   LoaderCircle,
   Sparkles,
@@ -88,7 +87,12 @@ function App() {
         },
       ])
     } catch (uploadError) {
-      setError(uploadError?.response?.data?.detail || 'Unable to upload the resume right now.')
+      setError(
+        uploadError?.response?.data?.detail ||
+          (uploadError?.code === 'ERR_NETWORK'
+            ? `Cannot connect to the backend at ${API_URL}. Start the FastAPI server and try again.`
+            : uploadError?.message || 'Unable to upload the resume right now.'),
+      )
     } finally {
       setIsUploading(false)
     }
@@ -96,6 +100,7 @@ function App() {
 
   const handleSubmit = async (event) => {
     event.preventDefault()
+    if (isSending) return
 
     const trimmedQuestion = question.trim()
     if (!trimmedQuestion) return
@@ -133,7 +138,15 @@ function App() {
 
       setMessages((current) =>
         current.map((message) =>
-          message.id === loadingMessage.id ? { ...message, content: answer, isLoading: false } : message,
+          message.id === loadingMessage.id
+            ? {
+                ...message,
+                content: answer,
+                isLoading: false,
+                agentName: data.agent_name,
+                sources: Array.isArray(data.sources) ? data.sources : [],
+              }
+            : message,
         ),
       )
     } catch (chatError) {
@@ -171,8 +184,8 @@ function App() {
         <div className="absolute bottom-0 left-1/3 h-72 w-72 rounded-full bg-sky-500/10 blur-3xl" />
       </div>
 
-      <div className="relative mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
-        <header className="glass-panel flex flex-col gap-4 rounded-[28px] px-4 py-4 sm:flex-row sm:items-center sm:justify-between">
+      <div className="relative mx-auto min-w-0 max-w-7xl px-4 py-4 sm:px-6 sm:py-6 lg:px-8">
+        <header className="glass-panel sticky top-4 z-50 flex flex-col gap-4 rounded-[28px] px-4 py-3 sm:flex-row sm:items-center sm:justify-between sm:py-4">
           <div className="flex items-center gap-3">
             <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-cyan-400 to-violet-500 shadow-glow">
               <BrainCircuit className="h-6 w-6 text-white" />
@@ -201,56 +214,56 @@ function App() {
           </div>
         </header>
 
-        <div className="mt-6 grid gap-6 lg:grid-cols-[300px_minmax(0,1fr)]">
-          <aside className="glass-panel rounded-[28px] p-5">
+        <div className="mt-4 grid min-w-0 grid-cols-[minmax(0,1fr)] gap-6 sm:mt-6 lg:grid-cols-[300px_minmax(0,1fr)]">
+          <aside className="glass-panel order-2 min-w-0 rounded-[28px] p-4 lg:order-1">
             <div className="flex items-center justify-between">
               <p className="text-[10px] uppercase tracking-[0.3em] text-slate-400">Profile</p>
               <Sparkles className="h-4 w-4 text-cyan-300" />
             </div>
 
-            <div className="mt-5 rounded-2xl border border-white/10 bg-slate-900/60 p-4">
+            <div className="mt-3 rounded-2xl border border-white/10 bg-slate-900/60 p-3">
               <div className="flex items-center gap-3">
-                <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-cyan-500/20 to-violet-500/20 text-cyan-300">
-                  <FileText className="h-5 w-5" />
+                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-cyan-500/20 to-violet-500/20 text-cyan-300">
+                  <FileText className="h-4 w-4" />
                 </div>
 
                 <div>
-                  <p className="text-lg font-semibold text-white">Candidate Resume</p>
-                  <p className="text-sm text-slate-400">{resumeName || 'Using default backend resume'}</p>
+                  <p className="text-base font-semibold text-white">Candidate Resume</p>
+                  <p className="text-xs text-slate-400">{resumeName || 'Using default backend resume'}</p>
                 </div>
               </div>
             </div>
 
-            <div className="mt-6 space-y-3">
+            <div className="mt-3 space-y-2">
               <div className="metric-card">
-                <p className="text-slate-400">AI model</p>
-                <p className="mt-1 text-base font-semibold text-white">Grok / Groq GPT OSS</p>
+                <p className="text-xs text-slate-400">AI model</p>
+                <p className="text-sm font-semibold text-white">Groq GPT-OSS</p>
               </div>
 
               <div className="metric-card">
-                <p className="text-slate-400">Mode</p>
-                <p className="mt-1 text-base font-semibold text-white">HR Interview Assistant</p>
+                <p className="text-xs text-slate-400">Mode</p>
+                <p className="text-sm font-semibold text-white">HR Interview Assistant</p>
               </div>
 
               <div className="metric-card">
-                <p className="text-slate-400">Use case</p>
-                <p className="mt-1 text-base font-semibold text-white">Career screening</p>
+                <p className="text-xs text-slate-400">Use case</p>
+                <p className="text-sm font-semibold text-white">Career screening</p>
               </div>
             </div>
 
-            <div className="mt-6 grid gap-2">
+            <div className="mt-3 grid gap-1">
               {focusAreas.map((item) => (
-                <div key={item.label} className="rounded-xl border border-white/10 bg-slate-900/60 px-3 py-2">
-                  <div className="text-[10px] uppercase tracking-[0.22em] text-slate-400">{item.label}</div>
-                  <div className="mt-1 text-sm font-medium text-white">{item.value}</div>
+                <div key={item.label} className="rounded-xl border border-white/10 bg-slate-900/60 px-2.5 py-1.5">
+                  <div className="text-[9px] uppercase tracking-[0.22em] text-slate-400">{item.label}</div>
+                  <div className="text-xs font-medium text-white">{item.value}</div>
                 </div>
               ))}
             </div>
 
-            <div className="mt-6">
+            <div className="mt-3">
               <p className="text-[10px] uppercase tracking-[0.3em] text-slate-400">Suggested prompts</p>
 
-              <div className="mt-3 space-y-2">
+              <div className="mt-2 space-y-1">
                 {suggestedQuestions.map((prompt) => (
                   <button
                     key={prompt}
@@ -265,7 +278,7 @@ function App() {
             </div>
           </aside>
 
-          <main className="glass-panel flex min-h-[720px] flex-col rounded-[28px] p-4 sm:p-5">
+          <main className="chat-panel glass-panel order-1 flex min-w-0 flex-col rounded-[28px] p-4 sm:p-5 lg:order-2">
             <div className="flex items-center justify-between border-b border-white/10 pb-4">
               <div className="flex items-center gap-3">
                 <div className="rounded-xl bg-cyan-500/10 p-2 text-cyan-300">
@@ -274,33 +287,16 @@ function App() {
 
                 <div>
                   <p className="text-xs text-slate-400">AI recruiter</p>
-                  <p className="font-semibold text-white">Portfolio Insight Agent</p>
+                  <p className="font-semibold text-white">Portfolio Agent Team</p>
                 </div>
               </div>
 
               <div className="rounded-full border border-emerald-400/40 bg-emerald-500/10 px-3 py-1 text-xs text-emerald-300">
-                Live
+                RAG + Agents
               </div>
             </div>
 
-            <div className="mb-4 grid gap-3 sm:grid-cols-3">
-              <div className="rounded-2xl border border-cyan-400/20 bg-cyan-500/5 p-3">
-                <div className="text-[10px] uppercase tracking-[0.25em] text-cyan-300">Brand</div>
-                <div className="mt-2 text-lg font-semibold text-white">AI Portfolio</div>
-              </div>
-
-              <div className="rounded-2xl border border-violet-400/20 bg-violet-500/5 p-3">
-                <div className="text-[10px] uppercase tracking-[0.25em] text-violet-300">Workflow</div>
-                <div className="mt-2 text-lg font-semibold text-white">Upload → Ask → Hire</div>
-              </div>
-
-              <div className="rounded-2xl border border-emerald-400/20 bg-emerald-500/5 p-3">
-                <div className="text-[10px] uppercase tracking-[0.25em] text-emerald-300">Status</div>
-                <div className="mt-2 text-lg font-semibold text-white">Production Ready</div>
-              </div>
-            </div>
-
-            <div className="chat-scroll mt-4 flex-1 space-y-4 pr-1">
+            <div className="chat-scroll mt-4 min-h-0 flex-1 space-y-4 overflow-y-auto pr-1">
               <AnimatePresence initial={false}>
                 {messages.map((message) => (
                   <motion.div
@@ -333,7 +329,35 @@ function App() {
                           Thinking...
                         </div>
                       ) : (
-                        <ReactMarkdown>{message.content}</ReactMarkdown>
+                        <>
+                          <ReactMarkdown>{message.content}</ReactMarkdown>
+                          {message.agentName && (
+                            <div className="mt-3 border-t border-white/10 pt-3">
+                              <div className="inline-flex items-center gap-1.5 rounded-full border border-cyan-400/20 bg-cyan-400/5 px-2.5 py-1 text-xs text-cyan-200">
+                                <BrainCircuit className="h-3.5 w-3.5" />
+                                {message.agentName}
+                              </div>
+                              {message.sources?.length > 0 && (
+                                <details className="mt-2 text-xs text-slate-300">
+                                  <summary className="cursor-pointer select-none text-slate-400 hover:text-cyan-200">
+                                    Resume evidence ({message.sources.length} excerpts)
+                                  </summary>
+                                  <ul className="mt-2 space-y-2">
+                                    {message.sources.map((source, index) => (
+                                      <li
+                                        key={`${source.section}-${index}`}
+                                        className="rounded-lg border border-white/10 bg-slate-950/50 p-2"
+                                      >
+                                        <p className="font-medium text-cyan-200">{source.section}</p>
+                                        <p className="mt-1 line-clamp-3 text-slate-400">{source.excerpt}</p>
+                                      </li>
+                                    ))}
+                                  </ul>
+                                </details>
+                              )}
+                            </div>
+                          )}
+                        </>
                       )}
                     </div>
                   </motion.div>
@@ -346,10 +370,15 @@ function App() {
                 {error}
               </div>
             )}
+          </main>
+        </div>
 
-            <form onSubmit={handleSubmit} className="mt-5 rounded-2xl border border-white/10 bg-slate-900/60 p-4">
+        <div className="composer-dock">
+          <div className="mx-auto grid max-w-7xl grid-cols-[minmax(0,1fr)] gap-6 px-4 sm:px-6 lg:grid-cols-[300px_minmax(0,1fr)] lg:px-8">
+            <div className="hidden lg:block" />
+            <form onSubmit={handleSubmit} className="pointer-events-auto rounded-2xl border border-white/10 bg-slate-900/90 p-2.5 shadow-lg shadow-slate-950/30 backdrop-blur-xl sm:p-3">
               <div
-                className={`flex flex-col gap-3 sm:flex-row sm:items-end ${isDragging ? 'ring-2 ring-cyan-400/60' : ''}`}
+                className={`flex flex-col gap-2 sm:flex-row sm:items-end ${isDragging ? 'ring-2 ring-cyan-400/60' : ''}`}
                 onDragOver={(event) => {
                   event.preventDefault()
                   setIsDragging(true)
@@ -368,19 +397,30 @@ function App() {
                   </label>
 
                   <textarea
-                    rows={3}
+                    rows={2}
+                    maxLength={2000}
                     value={question}
                     onChange={(event) => setQuestion(event.target.value)}
+                    onKeyDown={(event) => {
+                      if (
+                        event.key === 'Enter' &&
+                        !event.shiftKey &&
+                        !event.nativeEvent.isComposing
+                      ) {
+                        event.preventDefault()
+                        event.currentTarget.form?.requestSubmit()
+                      }
+                    }}
                     placeholder={
                       resumeName
                         ? 'Ask a focused question about the uploaded resume...'
                         : 'Ask about the resume, skills, education, or experience...'
                     }
-                    className="input-area"
+                    className="input-area py-2.5"
                   />
                 </div>
 
-                <div className="flex flex-col gap-2 sm:items-end">
+                <div className="flex flex-row justify-end gap-2 sm:flex-col sm:items-end">
                   <button
                     type="button"
                     onClick={() => fileInputRef.current?.click()}
@@ -414,17 +454,13 @@ function App() {
                 className="hidden"
               />
 
-              <div className="mt-3 flex flex-col gap-2 text-xs text-slate-400 sm:flex-row sm:items-center sm:justify-between">
-                <span>
-                  {resumeName ? `Loaded: ${resumeName}` : 'No resume uploaded yet — default resume will be used if present.'}
-                </span>
-                <span className="inline-flex items-center gap-1 text-slate-300">
-                  <CheckCircle2 className="h-3.5 w-3.5 text-cyan-400" />
-                  Secure AI chat
-                </span>
-              </div>
+              {resumeName && (
+                <div className="mt-3 text-xs text-slate-400">
+                  Loaded: {resumeName}
+                </div>
+              )}
             </form>
-          </main>
+          </div>
         </div>
       </div>
     </div>

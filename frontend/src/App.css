@@ -7,11 +7,11 @@
 }
 
 .metric-card {
-  @apply rounded-2xl border border-white/10 bg-slate-900/60 p-3.5;
+  @apply rounded-2xl border border-white/10 bg-slate-900/60 p-2.5;
 }
 
 .prompt-chip {
-  @apply w-full rounded-xl border border-white/10 bg-slate-900/80 px-3 py-2 text-left text-sm text-slate-200 transition hover:border-cyan-400/40 hover:bg-cyan-500/10;
+  @apply w-full rounded-xl border border-white/10 bg-slate-900/80 px-3 py-1.5 text-left text-xs text-slate-200 transition hover:border-cyan-400/40 hover:bg-cyan-500/10;
 }
 
 .primary-btn,
@@ -33,6 +33,32 @@
 
 .chat-scroll {
   scrollbar-color: rgba(148, 163, 184, 0.5) rgba(15, 23, 42, 0.2);
+  padding-bottom: 10rem;
+}
+
+.composer-dock {
+  position: fixed;
+  z-index: 40;
+  inset-inline: 0;
+  bottom: 0;
+  padding-top: 0.75rem;
+  padding-bottom: max(0.5rem, env(safe-area-inset-bottom));
+  pointer-events: none;
+}
+
+.chat-panel {
+  position: sticky;
+  top: 9rem;
+  height: calc(100dvh - 10rem);
+  min-height: 0;
+  overflow: hidden;
+}
+
+@media (min-width: 640px) {
+  .chat-panel {
+    top: 7rem;
+    height: calc(100dvh - 8rem);
+  }
 }
 
 .chat-scroll::-webkit-scrollbar {
