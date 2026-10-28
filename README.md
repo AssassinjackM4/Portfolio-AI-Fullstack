@@ -1,6 +1,6 @@
 <div align="center">
 
-# 🤖 Portfolio AI Fullstack Agent
+# 🤖 Portfolio-AI-Multi-Agent-RAG
 
 ### *Your Personal AI Career Representative — Recruiters Ask, AI Answers!* 💼🤖
 
